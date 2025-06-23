@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db   = 'medics';
+$db   = 'me=dics';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
