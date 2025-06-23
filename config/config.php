@@ -1,6 +1,6 @@
 <?php
-$host = 'localhost';
-$db   = 'me=dics';
+$host = 'srv1666.hstgr.io';
+$db   = 'medics';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
