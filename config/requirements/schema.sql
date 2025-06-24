@@ -10,6 +10,8 @@ CREATE TABLE admin (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES admin(id) ON DELETE SET NULL
 );
+
+-- ----------------------------user data----------------------------------
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -32,6 +34,43 @@ CREATE TABLE doctors (
     available BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE TABLE doctors (
+    user_id INT PRIMARY KEY,
+    specialization VARCHAR(150) NOT NULL,
+    qualifications TEXT,
+    experience_years INT DEFAULT 0,
+    languages VARCHAR(255),
+    bio TEXT,
+    license_number VARCHAR(100) UNIQUE,
+    is_verified BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    doctor_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    review_text TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (doctor_id) REFERENCES doctors(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE doctor_availability (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    is_available BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES doctors(user_id) ON DELETE CASCADE
+);
+
 CREATE TABLE appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
@@ -92,7 +131,7 @@ CREATE TABLE notifications (
 );
 
 
-
+-- ----------------------------chat system----------------------------------
 CREATE TABLE conversations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     participant_one_id INT NOT NULL,
@@ -109,12 +148,14 @@ CREATE TABLE messages (
     sender_id INT NOT NULL,
     message TEXT,
     message_type ENUM('text', 'image', 'file') DEFAULT 'text',
+    has_attachment BOOLEAN DEFAULT FALSE,
     is_read BOOLEAN DEFAULT FALSE,
     read_at DATETIME DEFAULT NULL,
     sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
 CREATE TABLE attachments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message_id INT NOT NULL,
@@ -130,4 +171,23 @@ CREATE TABLE blocked_users (
     blocked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (blocked_by) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (blocked_user) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ---------------------------- end of chat system----------------------------------
+
+
+CREATE TABLE support_tickets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    category VARCHAR(100),
+    priority ENUM('Low', 'Medium', 'High', 'Urgent') DEFAULT 'Medium',
+    status ENUM('Open', 'In Progress', 'Resolved', 'Closed') DEFAULT 'Open',
+    assigned_to INT DEFAULT NULL,
+    attachment_url VARCHAR(255) DEFAULT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (assigned_to) REFERENCES users(id)
 );
