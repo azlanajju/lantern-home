@@ -13,8 +13,7 @@ ErrorDocument 403 /errors/unauthorized.php
     Deny from all
 </FilesMatch>
 
-# Prevent directory listing
-Options -Indexes
+
 
 # Clean URLs (optional if you're using routing/index.php as front controller)
 RewriteCond %{REQUEST_FILENAME} !-f
