@@ -191,3 +191,18 @@ CREATE TABLE support_tickets (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (assigned_to) REFERENCES users(id)
 );
+CREATE TABLE activity_logs (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT DEFAULT NULL,
+    activity_type VARCHAR(100) NOT NULL,
+    activity_subtype VARCHAR(100) DEFAULT NULL,
+    description TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    device_info VARCHAR(255),
+    metadata JSON DEFAULT NULL,
+    created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    INDEX idx_user_time (user_id, created_at),
+    INDEX idx_activity_type (activity_type)
+);
