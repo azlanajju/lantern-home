@@ -90,3 +90,28 @@ CREATE TABLE notifications (
     FOREIGN KEY (from_user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (to_user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+
+CREATE TABLE conversations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    participant_one_id INT NOT NULL,
+    participant_two_id INT NOT NULL,
+    started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_message_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (participant_one_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (participant_two_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id INT NOT NULL,
+    sender_id INT NOT NULL,
+    message TEXT,
+    message_type ENUM('text', 'image', 'file') DEFAULT 'text',
+    is_read BOOLEAN DEFAULT FALSE,
+    read_at DATETIME DEFAULT NULL,
+    sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+);
