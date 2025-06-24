@@ -10,11 +10,6 @@ ErrorDocument 403 /errors/unauthorized.php
 # Prevent directory listing
 Options -Indexes
 
-# Prevent access to sensitive files
-<FilesMatch "\.(env|git|htaccess|ini|log|sh|sql)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
 
 
 
