@@ -115,3 +115,19 @@ CREATE TABLE messages (
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE TABLE attachments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message_id INT NOT NULL,
+    file_url VARCHAR(255),
+    file_type VARCHAR(50),
+    uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE
+);
+CREATE TABLE blocked_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    blocked_by INT NOT NULL,
+    blocked_user INT NOT NULL,
+    blocked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (blocked_by) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (blocked_user) REFERENCES users(id) ON DELETE CASCADE
+);
