@@ -7,6 +7,9 @@ ErrorDocument 404 /errors/404.php
 ErrorDocument 500 /errors/500.php
 ErrorDocument 403 /errors/unauthorized.php
 
+# Prevent directory listing
+Options -Indexes
+
 # Prevent access to sensitive files
 <FilesMatch "\.(env|git|htaccess|ini|log|sh|sql)$">
     Order allow,deny
