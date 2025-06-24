@@ -77,13 +77,15 @@ CREATE TABLE payments (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-
 CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     from_user_id INT DEFAULT NULL,
     to_user_id INT NOT NULL,
-    message TEXT,
+    message TEXT NOT NULL,
+    type ENUM('system', 'appointment', 'payment', 'prescription', 'chat') DEFAULT 'system',
+    reference_id INT DEFAULT NULL,
     is_read BOOLEAN DEFAULT FALSE,
+    read_at DATETIME DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (from_user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (to_user_id) REFERENCES users(id) ON DELETE CASCADE
