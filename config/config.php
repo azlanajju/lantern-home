@@ -1,5 +1,5 @@
 <?php
-$host = 'srv1666.hstgr.io';
+$host = 'localhost';
 $db   = 'medics';
 $user = 'root';
 $pass = '';
